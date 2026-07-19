@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Magical Birthday Adventure for Nisha ✨</title>
+    <style>
+        :root {
+            --bg-pastel: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 50%, #e8dbfc 100%);
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --primary-pink: #ff85a2;
+            --dark-pink: #f06292;
+            --text-color: #4a3b4e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-pastel);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            transition: background 2s ease;
+        }
+
+        .ambient-particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatAmbient 12s infinite ease-in-out alternate;
+        }
+
+        @keyframes floatAmbient {
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.3; }
+            100% { transform: translateY(-80px) rotate(360deg) scale(1.2); opacity: 0.8; }
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .audio-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .audio-control:hover { transform: scale(1.05); }
+
+        .game-container {
+            position: relative;
+            width: 90%;
+            max-width: 550px;
+            min-height: 380px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(240, 98, 146, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .step-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .step-panel.active { display: flex; }
+
+        @keyframes scaleIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff85a2 0%, #f06292 100%);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(240, 98, 146, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 10px;
+            outline: none;
+        }
+        .btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(240, 98, 146, 0.4);
+        }
+        .btn:active { transform: translateY(-1px); }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark-pink);
+            border: 2px solid #ff85a2;
+        }
+
+        h2 { font-size: 2rem; margin-bottom: 20px; color: #5c3d75; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        p { font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; }
+
+        .shake-screen { animation: screenShake 0.5s ease-in-out; }
+        @keyframes screenShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        #btn-maybe { position: relative; transition: all 0.2s ease; }
+
+        /* Feature 1: Don't Click Me */
+        #btn-dont-click { position: relative; transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); white-space: nowrap; z-index: 15; }
+
+        /* Step 2: Running Present & Multi-Box */
+        .gift-wrapper { position: relative; width: 100px; height: 100px; cursor: pointer; transition: all 0.15s ease; }
+        .gift-box {
+            width: 100%; height: 100%; background: #ff6b8b; border-radius: 12px; position: relative;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1); transform-style: preserve-3d; transition: transform 0.5s, opacity 0.5s;
+        }
+        .gift-box::before { content: ''; position: absolute; left: 45%; top: 0; width: 10%; height: 100%; background: #fff066; }
+        .gift-box::after { content: ''; position: absolute; top: 45%; left: 0; width: 100%; height: 10%; background: #fff066; }
+        .gift-bow {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            width: 30px; height: 30px; background: #fff066; border-radius: 50% 50% 0 50%; rotate: 45deg;
+        }
+        .gift-bow::after {
+            content: ''; position: absolute; bottom: 0; right: 0;
+            width: 30px; height: 30px; background: #fff066; border-radius: 50% 50% 50% 0; rotate: 90deg;
+        }
+        .gift-wrapper.opened .gift-box { transform: scale(0); opacity: 0; }
+        
+        .multi-gift-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; margin: 20px 0; }
+        .gift-alt-1 .gift-box { background: #74b9ff; }
+        .gift-alt-2 .gift-box { background: #a29bfe; }
+        .gift-alt-3 .gift-box { background: #55efc4; }
+        .gift-alt-4 .gift-box { background: #fd79a8; }
+        .gift-alt-5 .gift-box { background: #fab1a0; }
+
+        /* Step 3: Balloons */
+        .balloon-zone { display: flex; justify-content: center; gap: 30px; height: 180px; align-items: flex-end; width: 100%; margin: 20px 0; }
+        .balloon {
+            width: 65px; height: 80px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            position: relative; cursor: pointer; animation: floatUp 3s infinite alternate ease-in-out;
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.15); transition: transform 0.1s;
+        }
+        .balloon::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; }
+        .balloon-1 { background: #ff85a2; animation-delay: 0s; }
+        .balloon-1::after { border-bottom: 8px solid #ff85a2; }
+        .balloon-2 { background: #a29bfe; animation-delay: 0.4s; }
+        .balloon-2::after { border-bottom: 8px solid #a29bfe; }
+        .balloon-3 { background: #74b9ff; animation-delay: 0.8s; }
+        .balloon-3::after { border-bottom: 8px solid #74b9ff; }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(-3deg); }
+            100% { transform: translateY(-35px) rotate(3deg); }
+        }
+        .balloon.popped { animation: popOut 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; pointer-events: none; }
+        @keyframes popOut { 0% { transform: scale(1); } 50% { transform: scale(1.3); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
+        .word-reveal { position: absolute; font-weight: bold; font-size: 1.3rem; color: #5c3d75; opacity: 0; transform: scale(0.5); transition: all 0.5s ease; pointer-events: none;}
+        .word-reveal.show { opacity: 1; transform: scale(1.2) translateY(-40px); }
+
+        /* Feature 3: Fake Loading */
+        .progress-container { width: 100%; background: rgba(0,0,0,0.05); height: 16px; border-radius: 10px; margin: 20px 0; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff85a2, #a29bfe); border-radius: 10px; transition: width 0.1s linear; }
+        .error-text { color: #e84118; font-weight: 800; font-size: 2.2rem; animation: glitch 0.3s infinite; display: none; }
+        @keyframes glitch {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            50% { transform: translate(-1px, -2px) rotate(-1deg); }
+            100% { transform: translate(1px, 2px) rotate(1deg); }
+        }
+
+        /* Step 4: Cake */
+        .cake-container { position: relative; width: 160px; height: 160px; margin: 20px 0; cursor: pointer; }
+        .cake-layer { width: 140px; height: 60px; background: #fbc531; border-radius: 20px 20px 0 0; position: absolute; bottom: 0; left: 10px; box-shadow: inset 0 -10px #f5b041; }
+        .cake-layer-top { width: 110px; height: 45px; background: #ff7675; border-radius: 15px 15px 0 0; position: absolute; bottom: 55px; left: 25px; box-shadow: inset 0 -8px #e84118; }
+        .candle { width: 8px; height: 35px; background: #9c88ff; position: absolute; bottom: 95px; left: 76px; border-radius: 4px; }
+        .flame {
+            width: 12px; height: 18px; background: #e1b12c; position: absolute; top: -16px; left: -2px;
+            border-radius: 50% 50% 20% 20%; animation: flicker 0.1s infinite alternate; opacity: 0; transition: opacity 0.3s;
+        }
+        .flame.lit { opacity: 1; }
+        @keyframes flicker { 0% { transform: scale(1) rotate(-2deg); } 100% { transform: scale(1.1) rotate(2deg); background: #f5cd79; } }
+        .smoke {
+            position: absolute; width: 4px; height: 20px; background: rgba(200,200,200,0.6);
+            top: -25px; left: 2px; border-radius: 50%; opacity: 0; pointer-events: none;
+        }
+        .smoke.active { animation: smokeRise 1.5s ease-out forwards; }
+        @keyframes smokeRise { 0% { opacity: 0; transform: translateY(0) scaleX(1); filter: blur(0); } 20% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(-40px) scaleX(3); filter: blur(4px); } }
+
+        /* Step 5: Chest and Keys */
+        .chest-container { width: 140px; height: 100px; background: #8c7ae6; border-radius: 16px 16px 8px 8px; position: relative; margin: 20px 0; border: 4px solid #7158e2; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .chest-lid { width: 100%; height: 45px; background: #7158e2; border-radius: 12px 12px 0 0; position: absolute; top: 0; left: 0; transition: transform 0.5s; transform-origin: top; border-bottom: 4px solid #5f27cd; }
+        .chest-lock { width: 20px; height: 25px; background: #f1c40f; position: absolute; bottom: -10px; left: 56px; border-radius: 4px; }
+        .chest-container.open .chest-lid { transform: rotateX(-110deg); }
+        .keys-zone { display: flex; justify-content: center; gap: 40px; width: 100%; height: 80px; margin-top: 20px; position: relative; }
+        .key-item { font-size: 2.2rem; cursor: pointer; animation: keyFloat 2s infinite alternate ease-in-out; transition: all 0.2s; }
+        .key-item:hover { transform: scale(1.3); }
+        #key1 { animation-delay: 0s; } #key2 { animation-delay: 0.5s; } #key3 { animation-delay: 1s; }
+        @keyframes keyFloat { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
+
+        /* Feature 4: Storybook System */
+        .book-container { width: 280px; height: 180px; position: relative; perspective: 1200px; margin: 20px 0; }
+        .book-page {
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            background: #fffcf2; border: 1px solid #e1dbcd; border-radius: 4px 12px 12px 4px;
+            padding: 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; font-weight: 600; font-style: italic; color: #5d5343;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.06);
+            transform-origin: left center; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s, z-index 0.1s;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+        }
+        .book-page.flipped { transform: rotateY(-160deg); opacity: 0; pointer-events: none; }
+
+        /* Feature 5: Shooting Star Arena */
+        .star-sky-zone { position: relative; width: 100%; height: 220px; background: rgba(15, 12, 32, 0.4); border-radius: 16px; margin: 15px 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+        .shooting-star-node {
+            position: absolute; top: -20px; left: -20px; font-size: 1.8rem; cursor: pointer;
+            z-index: 20; display: none; filter: drop-shadow(0 0 8px #fff066);
+        }
+        @keyframes strikeAcross {
+            0% { top: -20px; left: -20px; transform: scale(0.8); }
+            100% { top: 240px; left: 100%; transform: scale(1.2); }
+        }
+
+        /* Ambient Dark overlays */
+        .blackout {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0914;
+            display: none; opacity: 0; z-index: 90; transition: opacity 2s ease;
+            justify-content: center; align-items: center; flex-direction: column;
+        }
+        .fireflies-container { position: relative; width: 300px; height: 100px; display: flex; justify-content: center; align-items: center; }
+        .firefly-text { color: transparent; font-size: 2.5rem; font-weight: 700; letter-spacing: 2px; text-align: center; position: relative; }
+        .firefly-text.glow {
+            color: #fff; text-shadow: 0 0 10px #ff85a2, 0 0 20px #ff85a2, 0 0 40px #ff85a2;
+            transition: color 2s, text-shadow 2s;
+        }
+
+        /* Step 7: Grand Finale Framework UI modifications */
+        .final-sky { background: linear-gradient(to bottom, #0f0c20 0%, #15102a 60%, #2c1a3a 100%) !important; color: #fff !important; }
+        .final-card {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4) !important;
+            color: #fff !important;
+            transform: scale(0.5); opacity: 0; transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .final-card.show { transform: scale(1); opacity: 1; }
+        .final-card h2 { color: #fff066; text-shadow: 0 0 15px rgba(255,240,102,0.6); font-size: 2.3rem; }
+        .final-card p { color: #f5f6fa; font-size: 1.15rem; line-height: 1.8; }
+
+        @media(max-width: 600px) {
+            .game-container { width: 92%; padding: 30px 20px; min-height: 410px; }
+            h2 { font-size: 1.6rem; }
+            .balloon-zone { gap: 15px; }
+            .key-item { font-size: 1.9rem; }
+            .book-container { width: 240px; height: 160px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-particle" style="top:15%; left:10%; font-size:25px;">✨</div>
+    <div class="ambient-particle" style="top:25%; right:15%; font-size:30px; animation-delay:1s;">🌸</div>
+    <div class="ambient-particle" style="bottom:20%; left:15%; font-size:20px; animation-delay:2s;">⭐</div>
+    <div class="ambient-particle" style="bottom:30%; right:10%; font-size:28px; animation-delay:1.5s;">🎈</div>
+
+    <canvas id="canvas-fx"></canvas>
+
+    <div class="audio-control" id="audio-toggle" onclick="toggleAudio()">
+        <span id="audio-icon">🎵</span> <span id="audio-text">Play Music</span>
+    </div>
+
+    <div class="game-container" id="main-box">
+        
+        <!-- Opening Screen -->
+        <div class="step-panel active" id="step-0">
+            <h2>A Special Gift Awaits...</h2>
+            <p>Every layer holds a secret. Are you ready to dive into the mystery?</p>
+            <button class="btn" onclick="goToStep(1)">🎁 Click for a Surprise</button>
+        </div>
+
+        <!-- STEP 1 – Are You Ready? -->
+        <div class="step-panel" id="step-1">
+            <h2>Hmm... Are you sure you're ready?</h2>
+            <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center; width:100%;">
+                <button class="btn" id="btn-yes" onclick="triggerYesAnimation()">Yes!</button>
+                <button class="btn btn-secondary" id="btn-maybe" onmouseover="dodgeButton()" onclick="dodgeButton()">Maybe...</button>
+            </div>
+        </div>
+
+        <!-- NEW FEATURE 1: Don't Click Me Challenge -->
+        <div class="step-panel" id="step-1b">
+            <h2>Whatever you do... 🛑</h2>
+            <p>Do NOT touch the button below!</p>
+            <button class="btn" id="btn-dont-click" onclick="handleDontClickMe()">🙈 Don't Click Me</button>
+        </div>
+
+        <!-- STEP 2 – The Naughty Gift -->
+        <div class="step-panel" id="step-2">
+            <h2>Unwrap Your Present! 🎁</h2>
+            <p>Go ahead, click it to see what's inside!</p>
+            <div class="gift-wrapper" id="gift-box-wrap" onclick="handleGiftClick()">
+                <div class="gift-bow"></div>
+                <div class="gift-box"></div>
+            </div>
+            <p id="gift-hint" style="font-size:0.9rem; color:var(--dark-pink); opacity:0.8;">Catch it if you can!</p>
+        </div>
+
+        <!-- NEW FEATURE 2: Multiple Gift Boxes -->
+        <div class="step-panel" id="step-2b">
+            <h2>The Gift Maze 🎁</h2>
+            <p id="multi-gift-prompt">Five boxes, but only one carries the pathway forward. Choose wisely!</p>
+            <div class="multi-gift-container">
+                <div class="gift-wrapper gift-alt-1" onclick="handleMultiGift(this, 1)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-2" onclick="handleMultiGift(this, 2)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-3" onclick="handleMultiGift(this, 3)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-4" onclick="handleMultiGift(this, 4)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-5" onclick="handleMultiGift(this, 5)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+            </div>
+        </div>
+
+        <!-- STEP 3 – Pop the Balloons -->
+        <div class="step-panel" id="step-3">
+            <h2>Pop the Floating Balloons!</h2>
+            <p>Release the hidden feelings locked within them.</p>
+            <div class="balloon-zone">
+                <div style="position:relative;">
+                    <div class="balloon balloon-1" onclick="popBalloon(this, 'Smile 😊')"></div>
+                    <div class="word-reveal" id="word-1">Smile 😊</div>
+                </div>
+                <div style="position:relative;">
+                    <div class="balloon balloon-2" onclick="popBalloon(this, 'Laugh 😂')"></div>
+                    <div class="word-reveal" id="word-2">Laugh 😂</div>
+                </div>
+                <div style="position:relative;">
+                    <div class="balloon balloon-3" onclick="popBalloon(this, 'Shine ✨')"></div>
+                    <div class="word-reveal" id="word-3">Shine ✨</div>
+                </div>
+            </div>
+            <h3 id="balloon-status" style="margin-top:20px; color:#5c3d75; height:24px;"></h3>
+        </div>
+
+        <!-- NEW FEATURE 3: Fake Loading Screen Wrapper Zone -->
+        <div class="step-panel" id="step-3b">
+            <h2 id="loading-header">Preparing Birthday Surprise...</h2>
+            <div class="progress-container" id="progress-wrapper">
+                <div class="progress-bar" id="load-bar"></div>
+            </div>
+            <div id="loading-percent" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">0%</div>
+            <div class="error-text" id="error-display">❌ ERROR</div>
+        </div>
+
+        <!-- STEP 4 – Birthday Cake -->
+        <div class="step-panel" id="step-4">
+            <h2>Make a Wish! 🎂</h2>
+            <p id="cake-prompt">Click the cake to light up the festive candles.</p>
+            <div class="cake-container" onclick="handleCakeClick()">
+                <div class="candle"><div class="flame" id="cake-flame"><div class="smoke" id="cake-smoke"></div></div></div>
+                <div class="cake-layer-top"></div>
+                <div class="cake-layer"></div>
+            </div>
+        </div>
+
+        <!-- STEP 5 – Treasure Chest -->
+        <div class="step-panel" id="step-5">
+            <h2>Unlock the Vault of Hearts 🗝️</h2>
+            <p>Only one ancient key reveals the grand configuration.</p>
+            <div class="chest-container" id="treasure-chest">
+                <div class="chest-lid"></div>
+                <div class="chest-lock"></div>
+            </div>
+            <div class="keys-zone">
+                <div class="key-item" id="key1" onclick="tryKey(1)">🗝️</div>
+                <div class="key-item" id="key2" onclick="tryKey(2)">🔑</div>
+                <div class="key-item" id="key3" onclick="tryKey(3)">🗝️</div>
+            </div>
+        </div>
+
+        <!-- NEW FEATURE 4: Mini Story Reveal -->
+        <div class="step-panel" id="step-5b">
+            <h2>Our Little Chapter 📖</h2>
+            <p>Click the pages to reveal a quiet truth...</p>
+            <div class="book-container" onclick="flipStoryPage()">
+                <div class="book-page" id="page-3" style="z-index: 1;">"I think you already know who we're talking about... 😉"</div>
+                <div class="book-page" id="page-2" style="z-index: 2;">"She's kind, funny, caring, and always brings smiles to others."</div>
+                <div class="book-page" id="page-1" style="z-index: 3;">"Someone very special has a birthday today..."</div>
+            </div>
+        </div>
+
+        <!-- NEW FEATURE 5: Shooting Star -->
+        <div class="step-panel" id="step-5c">
+            <h2>Celestial Alignment 🌠</h2>
+            <p>Catch the shooting star and make a wish.</p>
+            <div class="star-sky-zone" id="sky-zone-board">
+                <div class="shooting-star-node" id="celestial-star" onclick="catchShootingStar()">💫</div>
+            </div>
+        </div>
+
+        <!-- NEW FEATURE 6: One Last Click Main Stage -->
+        <div class="step-panel" id="step-6b">
+            <button class="btn" onclick="executeUltimateCinematicClick()" style="font-size: 1.4rem; padding: 20px 45px; animation: flicker 0.5s infinite alternate;">✨ One Last Click...</button>
+        </div>
+
+        <!-- FINAL REVEAL (Nisha's Card) -->
+        <div class="step-panel" id="step-7">
+            <h2>🎉 Happy Birthday, Nisha! 🎂</h2>
+            <p style="text-align: justify; text-justify: inter-word;">Wishing you endless happiness, lots of laughter, good health, exciting adventures, and countless reasons to smile. May every day of this new year bring you beautiful memories and wonderful moments. Keep being the amazing person you are. Have an absolutely fantastic birthday! 💖✨</p>
+            <button class="btn" onclick="restartAdventure()" style="background: linear-gradient(135deg, #fff066 0%, #f1c40f 100%); color:#333;">🎉 Celebrate Again</button>
+        </div>
+
+    </div>
+
+    <!-- STEP 6 – Almost There Intermission Layer -->
+    <div class="blackout" id="blackout-screen">
+        <div class="fireflies-container">
+            <div class="firefly-text" id="firefly-msg">Almost There...</div>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx = null;
+        let audioPlaying = false;
+        let mainSequenceInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playTone(freq, type, duration, startTime, vol = 0.1) {
+            if(!audioPlaying) return;
+            let osc = audioCtx.createOscillator();
+            let gainNode = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, startTime);
+            gainNode.gain.setValueAtTime(vol, startTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, startTime + duration);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+        }
+
+        function startBGM() {
+            initAudio();
+            audioPlaying = true;
+            let tempo = 140; 
+            let quarterNote = 60 / tempo;
+            
+            let melody = [
+                261.63, 261.63, 293.66, 261.63, 349.23, 329.63,
+                261.63, 261.63, 293.66, 261.63, 392.00, 349.23,
+                261.63, 261.63, 523.25, 440.00, 349.23, 329.63, 293.66,
+                466.16, 466.16, 440.00, 349.23, 392.00, 349.23
+            ];
+            let beats = [
+                0.75, 0.25, 1, 1, 1, 2,
+                0.75, 0.25, 1, 1, 1, 2,
+                0.75, 0.25, 1, 1, 1, 1, 2,
+                0.75, 0.25, 1, 1, 1, 2
+            ];
+
+            let lookahead = 0.5;
+            let index = 0;
+            let nextNoteTime = audioCtx.currentTime;
+
+            function scheduleNextNotes() {
+                while (nextNoteTime < audioCtx.currentTime + lookahead && audioPlaying) {
+                    let duration = beats[index] * quarterNote;
+                    playTone(melody[index], 'triangle', duration, nextNoteTime, 0.08);
+                    nextNoteTime += duration;
+                    index = (index + 1) % melody.length;
+                }
+                if(audioPlaying) {
+                    mainSequenceInterval = setTimeout(scheduleNextNotes, 100);
+                }
+            }
+            scheduleNextNotes();
+        }
+
+        function stopBGM() {
+            audioPlaying = false;
+            if(mainSequenceInterval) clearTimeout(mainSequenceInterval);
+        }
+
+        function toggleAudio() {
+            let icon = document.getElementById('audio-icon');
+            let text = document.getElementById('audio-text');
+            if (!audioPlaying) {
+                audioPlaying = true;
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                startBGM();
+                icon.innerText = "⏸️";
+                text.innerText = "Pause Music";
+                playSystemSound('click');
+            } else {
+                stopBGM();
+                icon.innerText = "🎵";
+                text.innerText = "Play Music";
+            }
+        }
+
+        function playSystemSound(type) {
+            if(!audioCtx) return;
+            let now = audioCtx.currentTime;
+            if(type === 'click') {
+                playTone(600, 'sine', 0.1, now, 0.15);
+            } else if(type === 'pop') {
+                playTone(900, 'sine', 0.08, now, 0.2);
+                playTone(400, 'triangle', 0.05, now, 0.1);
+            } else if(type === 'success') {
+                playTone(523.25, 'sine', 0.15, now, 0.15);
+                playTone(659.25, 'sine', 0.15, now + 0.1, 0.15);
+                playTone(783.99, 'sine', 0.3, now + 0.2, 0.15);
+            } else if(type === 'fail') {
+                playTone(220, 'sawtooth', 0.15, now, 0.15);
+                playTone(180, 'sawtooth', 0.15, now + 0.05, 0.15);
+            } else if(type === 'woosh') {
+                playTone(340, 'triangle', 0.15, now, 0.2);
+            } else if(type === 'glitch') {
+                playTone(120, 'sawtooth', 0.05, now, 0.3);
+                playTone(90, 'sawtooth', 0.08, now + 0.04, 0.3);
+            } else if(type === 'swell') {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 1.5);
+                gain.gain.setValueAtTime(0.01, now);
+                gain.gain.linearRampToValueAtTime(0.2, now + 1.0);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 1.5);
+            }
+        }
+
+        const canvas = document.getElementById('canvas-fx');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let fireworks = [];
+        let activeBalloonsArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color, type='confetti') {
+                this.x = x; this.y = y; this.color = color; this.type = type;
+                this.radius = type === 'confetti' ? Math.random() * 6 + 4 : Math.random() * 3 + 1;
+                this.vx = (Math.random() - 0.5) * 8;
+                this.vy = type === 'confetti' ? (Math.random() - 0.8) * 10 : (Math.random() - 0.5) * 6;
+                this.gravity = type === 'confetti' ? 0.2 : 0.02;
+                this.alpha = 1;
+                this.rotation = Math.random() * Math.PI;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy; this.vy += this.gravity;
+                this.alpha -= 0.015; this.rotation += this.rotationSpeed;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.fillStyle = this.color;
+                if(this.type === 'confetti') {
+                    ctx.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius);
+                } else {
+                    ctx.beginPath(); ctx.arc(0,0, this.radius, 0, Math.PI*2); ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        class Firework {
+            constructor(x, targetY) {
+                this.x = x; this.y = canvas.height; this.targetY = targetY;
+                this.vy = -Math.random() * 4 - 8;
+                this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                this.exploded = false;
+            }
+            update() {
+                this.y += this.vy;
+                if(this.vy >= 0 || this.y <= this.targetY) {
+                    this.exploded = true;
+                    createExplosion(this.x, this.y, this.color);
+                }
+            }
+            draw() {
+                if(!this.exploded) {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath(); ctx.arc(this.x, this.y, 4, 0, Math.PI*2); ctx.fill();
+                }
+            }
+        }
+
+        class FloatingCelebBalloon {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 40;
+                this.radius = Math.random() * 15 + 20;
+                this.speed = Math.random() * 2 + 1;
+                this.color = `hsl(${Math.random() * 360}, 85%, 65%)`;
+                this.swing = Math.random() * 2;
+                this.swingSpeed = Math.random() * 0.05;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y -= this.speed;
+                this.angle += this.swingSpeed;
+                this.x += Math.sin(this.angle) * this.swing;
+            }
+            draw() {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, this.radius * 0.8, this.radius, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // Balloon Knot
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y + this.radius);
+                ctx.lineTo(this.x - 5, this.y + this.radius + 6);
+                ctx.lineTo(this.x + 5, this.y + this.radius + 6);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createExplosion(x, y, color) {
+            playSystemSound('pop');
+            for(let i=0; i<60; i++) {
+                particles.push(new Particle(x, y, color, 'sparkle'));
+            }
+        }
+
+        function burstConfetti(x, y) {
+            let colors = ['#ff85a2', '#a29bfe', '#74b9ff', '#fff066', '#55efc4'];
+            for(let i=0; i<80; i++) {
+                particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], 'confetti'));
+            }
+        }
+
+        let runEngineActive = true;
+        function loopVFX() {
+            if(!runEngineActive) return;
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+
+            for(let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if(particles[i].alpha <= 0) particles.splice(i, 1);
+            }
+
+            for(let i = fireworks.length - 1; i >= 0; i--) {
+                fireworks[i].update();
+                fireworks[i].draw();
+                if(fireworks[i].exploded) fireworks.splice(i, 1);
+            }
+
+            for(let i = activeBalloonsArray.length - 1; i >= 0; i--) {
+                activeBalloonsArray[i].update();
+                activeBalloonsArray[i].draw();
+                if(activeBalloonsArray[i].y < -50) activeBalloonsArray.splice(i, 1);
+            }
+
+            if(currentStep === '7' && Math.random() < 0.05) {
+                fireworks.push(new Firework(Math.random() * canvas.width, Math.random() * (canvas.height * 0.5)));
+            }
+            if(currentStep === '7' && Math.random() < 0.03) {
+                activeBalloonsArray.push(new FloatingCelebBalloon());
+            }
+
+            requestAnimationFrame(loopVFX);
+        }
+        requestAnimationFrame(loopVFX);
+
+
+        // Phase Engine Controllers
+        let currentStep = '0';
+        let dodgeCount = 0;
+        let dontClickCount = 0;
+        let giftClickAttempts = 0;
+        let totalBalloonsPopped = 0;
+        let cakeState = 0; 
+        let currentStoryPage = 1;
+        let targetStarLoop = null;
+
+        function goToStep(stepId) {
+            initAudio();
+            playSystemSound('click');
+            
+            document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+            
+            if(stepId === '1') {
+                document.getElementById('main-box').classList.add('shake-screen');
+                setTimeout(() => document.getElementById('main-box').classList.remove('shake-screen'), 500);
+            }
+            if(stepId === '3b') {
+                setTimeout(runFakeLoaderAnimation, 600);
+            }
+            if(stepId === '5c') {
+                setTimeout(igniteShootingStarLoop, 500);
+            }
+
+            currentStep = stepId;
+            let currentPanel = document.getElementById(`step-${stepId}`);
+            if(currentPanel) currentPanel.classList.add('active');
+        }
+
+        // STEP 1 Controllers
+        function dodgeButton() {
+            playSystemSound('woosh');
+            let btn = document.getElementById('btn-maybe');
+            if (dodgeCount === 0) {
+                btn.style.transform = `translateX(${Math.random() > 0.5 ? 90 : -90}px) translateY(${Math.random() > 0.5 ? 40 : -40}px)`;
+                dodgeCount++;
+            } else {
+                btn.innerText = "Yes!";
+                btn.className = "btn";
+                btn.style.transform = "none";
+                btn.onmouseover = null;
+                btn.onclick = function() { triggerYesAnimation(); };
+            }
+        }
+
+        function triggerYesAnimation() {
+            burstConfetti(window.innerWidth / 2, window.innerHeight / 2);
+            playSystemSound('success');
+            setTimeout(() => goToStep('1b'), 1000);
+        }
+
+        // FEATURE 1: Don't Click Me Challenge
+        function handleDontClickMe() {
+            let btn = document.getElementById('btn-dont-click');
+            let strings = ["Too slow! 😜", "Nope 😂", "Almost!", "Try again! 🤔", "Catch me! 💨"];
+            
+            if(dontClickCount < 5) {
+                playSystemSound('woosh');
+                let parentRect = document.getElementById('main-box').getBoundingClientRect();
+                let maxX = parentRect.width - btn.offsetWidth - 40;
+                let maxY = parentRect.height - btn.offsetHeight - 120;
+                
+                let newX = Math.random() * maxX - (maxX/2);
+                let newY = Math.random() * maxY - (maxY/2) + 20;
+                
+                btn.style.transform = `translate(${newX}px, ${newY}px)`;
+                btn.innerText = strings[dontClickCount % strings.length];
+                dontClickCount++;
+            } else {
+                btn.style.transform = "none";
+                btn.innerText = "Okay, okay... You win! Let's continue.";
+                playSystemSound('success');
+                btn.disabled = true;
+                setTimeout(() => goToStep('2'), 1500);
+            }
+        }
+
+        // STEP 2 – The Naughty Gift
+        function handleGiftClick() {
+            let wrapper = document.getElementById('gift-box-wrap');
+            let hint = document.getElementById('gift-hint');
+            
+            if(giftClickAttempts < 4) {
+                playSystemSound('woosh');
+                let parentRect = document.getElementById('main-box').getBoundingClientRect();
+                let maxX = parentRect.width - 140;
+                let maxY = parentRect.height - 200;
+                let newX = Math.random() * maxX - (maxX/2);
+                let newY = Math.random() * maxY - (maxY/2) + 30;
+                
+                wrapper.style.transform = `translate(${newX}px, ${newY}px)`;
+                giftClickAttempts++;
+                hint.innerText = ["Too slow!", "Over here!", "Catch me!", "Almost!"][giftClickAttempts-1];
+            } else {
+                wrapper.style.transform = "none";
+                wrapper.classList.add('opened');
+                playSystemSound('success');
+                hint.innerText = "Opened!";
+                setTimeout(() => {
+                    alert("📜 Inside is a small note that says: 'Not yet... One more challenge!'");
+                    goToStep('2b');
+                }, 600);
+            }
+        }
+
+        // FEATURE 2: Multiple Gift Boxes
+        function handleMultiGift(element, id) {
+            if(element.classList.contains('opened')) return;
+            
+            if(id === 3) { // Correct box choice mapping
+                element.classList.add('opened');
+                playSystemSound('success');
+                burstConfetti(window.innerWidth/2, window.innerHeight/2);
+                document.getElementById('multi-gift-prompt').innerText = "You found the real surprise! ✨";
+                setTimeout(() => goToStep('3'), 1500);
+            } else {
+                element.classList.add('opened');
+                playSystemSound('fail');
+                let funnyMessages = ["😂 Oops... Empty!", "🎈 Maybe another one?", "😅 Not this gift.", "✨ Keep looking!"];
+                document.getElementById('multi-gift-prompt').innerText = funnyMessages[id % funnyMessages.length];
+            }
+        }
+
+        // STEP 3 – Pop the Balloons
+        function popBalloon(element, word) {
+            if(element.classList.contains('popped')) return;
+            element.classList.add('popped');
+            playSystemSound('pop');
+            
+            let sibling = element.nextElementSibling;
+            if(sibling) sibling.classList.add('show');
+            
+            totalBalloonsPopped++;
+            document.getElementById('balloon-status').innerText = `${word}!`;
+            
+            if(totalBalloonsPopped === 3) {
+                document.getElementById('balloon-status').innerText = "You're doing great! ✨";
+                setTimeout(() => goToStep('3b'), 1500);
+            }
+        }
+
+        // FEATURE 3: Fake Loading Screen
+        function runFakeLoaderAnimation() {
+            let bar = document.getElementById('load-bar');
+            let textDisplay = document.getElementById('loading-percent');
+            let header = document.getElementById('loading-header');
+            let wrapper = document.getElementById('progress-wrapper');
+            let checkpoints = [
+                {p: 20, t: 200}, {p: 47, t: 500}, {p: 81, t: 900}, {p: 99, t: 1400}
+            ];
+
+            checkpoints.forEach(cp => {
+                setTimeout(() => {
+                    bar.style.width = `${cp.p}%`;
+                    textDisplay.innerText = `${cp.p}%`;
+                    playSystemSound('click');
+                }, cp.t);
+            });
+
+            // Trigger Error state
+            setTimeout(() => {
+                playSystemSound('glitch');
+                textDisplay.style.display = 'none';
+                wrapper.style.display = 'none';
+                header.style.display = 'none';
+                document.getElementById('error-display').style.display = 'block';
+            }, 1800);
+
+            // Trigger Joking frame resolution
+            setTimeout(() => {
+                playSystemSound('success');
+                document.getElementById('error-display').style.display = 'none';
+                header.style.display = 'block';
+                header.innerText = "Just kidding! 😂";
+                burstConfetti(window.innerWidth/2, window.innerHeight/2);
+            }, 3000);
+
+            setTimeout(() => goToStep('4'), 4500);
+        }
+
+        // STEP 4 – Birthday Cake
+        function handleCakeClick() {
+            let flame = document.getElementById('cake-flame');
+            let smoke = document.getElementById('cake-smoke');
+            let prompt = document.getElementById('cake-prompt');
+            
+            if (cakeState === 0) {
+                playSystemSound('success');
+                flame.classList.add('lit');
+                prompt.innerText = "Perfect! Now click the flame to blow it out and make your secret wish.";
+                cakeState = 1;
+            } else if (cakeState === 1) {
+                playSystemSound('woosh');
+                flame.classList.remove('lit');
+                smoke.classList.add('active');
+                prompt.innerText = "Wish captured perfectly! One last surprise...";
+                cakeState = 2;
+                setTimeout(() => goToStep('5'), 2000);
+            }
+        }
+
+        // STEP 5 – Treasure Chest
+        function tryKey(keyId) {
+            if(keyId === 2) { 
+                document.getElementById('treasure-chest').classList.add('open');
+                playSystemSound('success');
+                burstConfetti(window.innerWidth/2, window.innerHeight/2);
+                setTimeout(() => goToStep('5b'), 1500);
+            } else {
+                playSystemSound('fail');
+                let targetEl = document.getElementById(`key${keyId}`);
+                targetEl.style.transform = "scale(0.7)";
+                if(keyId === 1) {
+                    for(let i=0; i<20; i++) particles.push(new Particle(window.innerWidth/2, window.innerHeight/2, '#fff066', 'sparkle'));
+                } else {
+                    alert("💥 A tiny explosion of sparkles! Wrong key, try another!");
+                }
+            }
+        }
+
+        // FEATURE 4: Mini Story Reveal
+        function flipStoryPage() {
+            let el = document.getElementById(`page-${currentStoryPage}`);
+            if(el) {
+                playSystemSound('woosh');
+                el.classList.add('flipped');
+                currentStoryPage++;
+                if(currentStoryPage > 3) {
+                    setTimeout(() => goToStep('5c'), 1000);
+                }
+            }
+        }
+
+        // FEATURE 5: Shooting Star
+        function igniteShootingStarLoop() {
+            let star = document.getElementById('celestial-star');
+            
+            function projectStarTrail() {
+                if(currentStep !== '5c') return;
+                star.style.display = 'block';
+                star.style.animation = 'strikeAcross 2s cubic-bezier(0.25, 1, 0.5, 1) forwards';
+                playSystemSound('woosh');
+                
+                // Reset animation properties upon completion cycle loop
+                setTimeout(() => {
+                    star.style.display = 'none';
+                    star.style.animation = 'none';
+                }, 2000);
+            }
+            
+            projectStarTrail();
+            targetStarLoop = setInterval(projectStarTrail, 4000);
+        }
+
+        function catchShootingStar() {
+            clearInterval(targetStarLoop);
+            playSystemSound('swell');
+            
+            let star = document.getElementById('celestial-star');
+            let rect = star.getBoundingClientRect();
+            for(let i=0; i<40; i++) {
+                particles.push(new Particle(rect.left + 15, rect.top + 15, '#fff066', 'sparkle'));
+            }
+            star.style.display = 'none';
+            
+            document.getElementById('sky-zone-board').style.background = 'rgba(255, 255, 255, 0.8)';
+            setTimeout(() => {
+                triggerBlackoutIntermission();
+            }, 600);
+        }
+
+        // STEP 6 INTERMISSION – Almost There
+        function triggerBlackoutIntermission() {
+            let blackout = document.getElementById('blackout-screen');
+            let fireflyText = document.getElementById('firefly-msg');
+            
+            blackout.style.display = 'flex';
+            setTimeout(() => blackout.style.opacity = '1', 50);
+
+            for(let i=0; i<30; i++) {
+                setTimeout(() => {
+                    let fx = Math.random() * window.innerWidth;
+                    let fy = Math.random() * window.innerHeight;
+                    particles.push(new Particle(fx, fy, '#fff066', 'sparkle'));
+                }, i * 100);
+            }
+
+            setTimeout(() => { fireflyText.classList.add('glow'); }, 1500);
+
+            setTimeout(() => {
+                blackout.style.opacity = '0';
+                setTimeout(() => {
+                    blackout.style.display = 'none';
+                    goToStep('6b');
+                }, 2000);
+            }, 4500);
+        }
+
+        // FEATURE 6: One Last Click Cinematic Configuration Matrix
+        function executeUltimateCinematicClick() {
+            document.body.classList.add('final-sky');
+            let mainBox = document.getElementById('main-box');
+            mainBox.classList.add('final-card');
+            
+            playSystemSound('success');
+            
+            // Mass launcher system configurations values tracking injection
+            let cx = window.innerWidth / 2;
+            let cy = window.innerHeight / 2;
+            
+            for(let i=0; i<150; i++) {
+                setTimeout(() => {
+                    particles.push(new Particle(cx + (Math.random() - 0.5)*100, cy + (Math.random() - 0.5)*100, `hsl(${Math.random()*360}, 100%, 70%)`, 'confetti'));
+                }, Math.random() * 800);
+            }
+
+            for(let k=0; k<8; k++) {
+                setTimeout(() => {
+                    fireworks.push(new Firework(Math.random() * window.innerWidth, Math.random() * (window.innerHeight * 0.4)));
+                }, k * 250);
+            }
+
+            for(let b=0; b<35; b++) {
+                setTimeout(() => {
+                    activeBalloonsArray.push(new FloatingCelebBalloon());
+                }, b * 60);
+            }
+
+            goToStep('7');
+            setTimeout(() => { mainBox.classList.add('show'); }, 500);
+        }
+
+        function restartAdventure() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
