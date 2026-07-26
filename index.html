@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Magical Birthday Adventure for Nisha ✨</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap');
+
         :root {
             --bg-pastel: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 50%, #e8dbfc 100%);
-            --glass-bg: rgba(255, 255, 255, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.7);
             --primary-pink: #ff85a2;
             --dark-pink: #f06292;
             --text-color: #4a3b4e;
@@ -23,7 +25,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-pastel);
             color: var(--text-color);
             min-height: 100vh;
@@ -66,7 +68,7 @@
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 10px 15px;
+            padding: 10px 18px;
             border-radius: 30px;
             cursor: pointer;
             display: flex;
@@ -82,7 +84,7 @@
             position: relative;
             width: 90%;
             max-width: 550px;
-            min-height: 380px;
+            min-height: 400px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(20px);
@@ -152,10 +154,10 @@
         }
         #btn-maybe { position: relative; transition: all 0.2s ease; }
 
-        /* Feature 1: Don't Click Me */
+        /* Step 1b: Don't Click Me */
         #btn-dont-click { position: relative; transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); white-space: nowrap; z-index: 15; }
 
-        /* Step 2: Running Present & Multi-Box */
+        /* Step 2: Gift Box */
         .gift-wrapper { position: relative; width: 100px; height: 100px; cursor: pointer; transition: all 0.15s ease; }
         .gift-box {
             width: 100%; height: 100%; background: #ff6b8b; border-radius: 12px; position: relative;
@@ -205,7 +207,7 @@
         .word-reveal { position: absolute; font-weight: bold; font-size: 1.3rem; color: #5c3d75; opacity: 0; transform: scale(0.5); transition: all 0.5s ease; pointer-events: none;}
         .word-reveal.show { opacity: 1; transform: scale(1.2) translateY(-40px); }
 
-        /* Feature 3: Fake Loading */
+        /* Step 3b: Fake Loading */
         .progress-container { width: 100%; background: rgba(0,0,0,0.05); height: 16px; border-radius: 10px; margin: 20px 0; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); }
         .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff85a2, #a29bfe); border-radius: 10px; transition: width 0.1s linear; }
         .error-text { color: #e84118; font-weight: 800; font-size: 2.2rem; animation: glitch 0.3s infinite; display: none; }
@@ -244,8 +246,8 @@
         #key1 { animation-delay: 0s; } #key2 { animation-delay: 0.5s; } #key3 { animation-delay: 1s; }
         @keyframes keyFloat { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
 
-        /* Feature 4: Storybook System */
-        .book-container { width: 280px; height: 180px; position: relative; perspective: 1200px; margin: 20px 0; }
+        /* Step 5b: Storybook System */
+        .book-container { width: 280px; height: 180px; position: relative; perspective: 1200px; margin: 20px 0; cursor: pointer; }
         .book-page {
             width: 100%; height: 100%; position: absolute; top: 0; left: 0;
             background: #fffcf2; border: 1px solid #e1dbcd; border-radius: 4px 12px 12px 4px;
@@ -257,7 +259,7 @@
         }
         .book-page.flipped { transform: rotateY(-160deg); opacity: 0; pointer-events: none; }
 
-        /* Feature 5: Shooting Star Arena */
+        /* Step 5c: Shooting Star Arena */
         .star-sky-zone { position: relative; width: 100%; height: 220px; background: rgba(15, 12, 32, 0.4); border-radius: 16px; margin: 15px 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
         .shooting-star-node {
             position: absolute; top: -20px; left: -20px; font-size: 1.8rem; cursor: pointer;
@@ -268,24 +270,49 @@
             100% { top: 240px; left: 100%; transform: scale(1.2); }
         }
 
-        /* Ambient Dark overlays */
-        .blackout {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0914;
-            display: none; opacity: 0; z-index: 90; transition: opacity 2s ease;
-            justify-content: center; align-items: center; flex-direction: column;
+        /* VOLLEYBALL & K-DRAMA THEMED EVENT */
+        .volleyball-zone {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(to bottom, #a18cd1 0%, #fbc2eb 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+            margin: 15px 0;
         }
-        .fireflies-container { position: relative; width: 300px; height: 100px; display: flex; justify-content: center; align-items: center; }
-        .firefly-text { color: transparent; font-size: 2.5rem; font-weight: 700; letter-spacing: 2px; text-align: center; position: relative; }
-        .firefly-text.glow {
-            color: #fff; text-shadow: 0 0 10px #ff85a2, 0 0 20px #ff85a2, 0 0 40px #ff85a2;
-            transition: color 2s, text-shadow 2s;
+        .net-line {
+            width: 100%; height: 4px; background: rgba(255,255,255,0.9);
+            position: absolute; top: 50%; box-shadow: 0 0 8px rgba(255,255,255,0.8);
+        }
+        .volleyball-ball {
+            font-size: 3.2rem; cursor: pointer; position: absolute;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+        }
+        .kdrama-banner {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem; color: #f06292;
+            text-shadow: 0 2px 10px rgba(240, 98, 146, 0.2);
+            margin-bottom: 10px;
         }
 
-        /* Step 7: Grand Finale Framework UI modifications */
+        /* K-Drama Slow Mo Intermission Layer */
+        .slowmo-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 240, 245, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 120; display: none; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 1s ease;
+        }
+
+        /* Grand Finale Theme */
         .final-sky { background: linear-gradient(to bottom, #0f0c20 0%, #15102a 60%, #2c1a3a 100%) !important; color: #fff !important; }
         .final-card {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
             box-shadow: 0 30px 60px rgba(0,0,0,0.4) !important;
             color: #fff !important;
             transform: scale(0.5); opacity: 0; transition: all 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -300,6 +327,7 @@
             .balloon-zone { gap: 15px; }
             .key-item { font-size: 1.9rem; }
             .book-container { width: 240px; height: 160px; }
+            .kdrama-banner { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -318,11 +346,12 @@
 
     <div class="game-container" id="main-box">
         
-        <!-- Opening Screen -->
+        <!-- STEP 0 – Welcome -->
         <div class="step-panel active" id="step-0">
+            <div class="kdrama-banner">Episode 1: The Adventure</div>
             <h2>A Special Gift Awaits...</h2>
             <p>Every layer holds a secret. Are you ready to dive into the mystery?</p>
-            <button class="btn" onclick="goToStep(1)">🎁 Click for a Surprise</button>
+            <button class="btn" onclick="goToStep('1')">🎁 Click for a Surprise</button>
         </div>
 
         <!-- STEP 1 – Are You Ready? -->
@@ -334,7 +363,7 @@
             </div>
         </div>
 
-        <!-- NEW FEATURE 1: Don't Click Me Challenge -->
+        <!-- STEP 1b: Don't Click Me Challenge -->
         <div class="step-panel" id="step-1b">
             <h2>Whatever you do... 🛑</h2>
             <p>Do NOT touch the button below!</p>
@@ -349,10 +378,10 @@
                 <div class="gift-bow"></div>
                 <div class="gift-box"></div>
             </div>
-            <p id="gift-hint" style="font-size:0.9rem; color:var(--dark-pink); opacity:0.8;">Catch it if you can!</p>
+            <p id="gift-hint" style="font-size:0.9rem; color:var(--dark-pink); opacity:0.8; margin-top:15px;">Catch it if you can!</p>
         </div>
 
-        <!-- NEW FEATURE 2: Multiple Gift Boxes -->
+        <!-- STEP 2b: Multiple Gift Boxes -->
         <div class="step-panel" id="step-2b">
             <h2>The Gift Maze 🎁</h2>
             <p id="multi-gift-prompt">Five boxes, but only one carries the pathway forward. Choose wisely!</p>
@@ -386,7 +415,7 @@
             <h3 id="balloon-status" style="margin-top:20px; color:#5c3d75; height:24px;"></h3>
         </div>
 
-        <!-- NEW FEATURE 3: Fake Loading Screen Wrapper Zone -->
+        <!-- STEP 3b: Fake Loading Screen -->
         <div class="step-panel" id="step-3b">
             <h2 id="loading-header">Preparing Birthday Surprise...</h2>
             <div class="progress-container" id="progress-wrapper">
@@ -422,7 +451,7 @@
             </div>
         </div>
 
-        <!-- NEW FEATURE 4: Mini Story Reveal -->
+        <!-- STEP 5b: Mini Story Reveal -->
         <div class="step-panel" id="step-5b">
             <h2>Our Little Chapter 📖</h2>
             <p>Click the pages to reveal a quiet truth...</p>
@@ -433,7 +462,7 @@
             </div>
         </div>
 
-        <!-- NEW FEATURE 5: Shooting Star -->
+        <!-- STEP 5c: Shooting Star -->
         <div class="step-panel" id="step-5c">
             <h2>Celestial Alignment 🌠</h2>
             <p>Catch the shooting star and make a wish.</p>
@@ -442,25 +471,37 @@
             </div>
         </div>
 
-        <!-- NEW FEATURE 6: One Last Click Main Stage -->
-        <div class="step-panel" id="step-6b">
-            <button class="btn" onclick="executeUltimateCinematicClick()" style="font-size: 1.4rem; padding: 20px 45px; animation: flicker 0.5s infinite alternate;">✨ One Last Click...</button>
+        <!-- STEP VOLLEYBALL: Match Point Spike Event -->
+        <div class="step-panel" id="step-volleyball">
+            <div class="kdrama-banner">Match Point Challenge! 🏐</div>
+            <h2>The Final Spike! ⚡</h2>
+            <p>Tap the volleyball to set up a match-winning spike!</p>
+            <div class="volleyball-zone">
+                <div class="net-line"></div>
+                <div class="volleyball-ball" id="vball" onclick="handleSpikeClick()">🏐</div>
+            </div>
+            <p id="spike-status" style="font-weight:700; color:var(--dark-pink); margin-top:10px;">Taps required: 4</p>
         </div>
 
-        <!-- FINAL REVEAL (Nisha's Card) -->
+        <!-- STEP 6b: One Last Click Main Stage -->
+        <div class="step-panel" id="step-6b">
+            <div class="kdrama-banner">Episode Finale ✨</div>
+            <button class="btn" onclick="executeUltimateCinematicClick()" style="font-size: 1.3rem; padding: 18px 40px; animation: flicker 0.5s infinite alternate;">✨ One Last Click...</button>
+        </div>
+
+        <!-- STEP 7: FINAL REVEAL (Nisha's Birthday Card) -->
         <div class="step-panel" id="step-7">
-            <h2>🎉 Happy Birthday, ! 🎂</h2>
-            <p style="text-align: justify; text-justify: inter-word;">Wishing you endless happiness, lots of laughter, good health, exciting adventures, and countless reasons to smile. May every day of this new year bring you beautiful memories and wonderful moments. Keep being the amazing person you are. Have an absolutely fantastic birthday! 💖✨</p>
+            <h2>🎉 Happy Birthday, Nisha! 🎂</h2>
+            <p style="text-align: justify; text-justify: inter-word;">Wishing you endless happiness, lots of laughter, good health, exciting adventures, and countless reasons to smile. May every day of this new year bring you beautiful memories and wonderful moments. Keep spiking through every challenge and being the amazing person you are. Have an absolutely fantastic birthday! 💖✨</p>
             <button class="btn" onclick="restartAdventure()" style="background: linear-gradient(135deg, #fff066 0%, #f1c40f 100%); color:#333;">🎉 Celebrate Again</button>
         </div>
 
     </div>
 
-    <!-- STEP 6 – Almost There Intermission Layer -->
-    <div class="blackout" id="blackout-screen">
-        <div class="fireflies-container">
-            <div class="firefly-text" id="firefly-msg">Almost There...</div>
-        </div>
+    <!-- K-DRAMA SLOW MO INTERMISSION LAYER -->
+    <div class="slowmo-overlay" id="slowmo-screen">
+        <div class="kdrama-banner" style="font-size: 2.8rem; color: #f06292;">Match Point Victory! ✨</div>
+        <p style="font-size: 1.25rem; font-style: italic; color: #5c3d75;">"Winning every rally, on and off the court..."</p>
     </div>
 
     <script>
@@ -564,9 +605,8 @@
                 playTone(180, 'sawtooth', 0.15, now + 0.05, 0.15);
             } else if(type === 'woosh') {
                 playTone(340, 'triangle', 0.15, now, 0.2);
-            } else if(type === 'glitch') {
-                playTone(120, 'sawtooth', 0.05, now, 0.3);
-                playTone(90, 'sawtooth', 0.08, now + 0.04, 0.3);
+            } else if(type === 'spike') {
+                playTone(750, 'triangle', 0.15, now, 0.25);
             } else if(type === 'swell') {
                 let osc = audioCtx.createOscillator();
                 let gain = audioCtx.createGain();
@@ -668,7 +708,6 @@
                 ctx.beginPath();
                 ctx.ellipse(this.x, this.y, this.radius * 0.8, this.radius, 0, 0, Math.PI * 2);
                 ctx.fill();
-                // Balloon Knot
                 ctx.beginPath();
                 ctx.moveTo(this.x, this.y + this.radius);
                 ctx.lineTo(this.x - 5, this.y + this.radius + 6);
@@ -727,8 +766,7 @@
         }
         requestAnimationFrame(loopVFX);
 
-
-        // Phase Engine Controllers
+        // Navigation and Phase Controller
         let currentStep = '0';
         let dodgeCount = 0;
         let dontClickCount = 0;
@@ -737,6 +775,7 @@
         let cakeState = 0; 
         let currentStoryPage = 1;
         let targetStarLoop = null;
+        let spikeCount = 4;
 
         function goToStep(stepId) {
             initAudio();
@@ -760,7 +799,7 @@
             if(currentPanel) currentPanel.classList.add('active');
         }
 
-        // STEP 1 Controllers
+        // STEP 1 Actions
         function dodgeButton() {
             playSystemSound('woosh');
             let btn = document.getElementById('btn-maybe');
@@ -782,7 +821,7 @@
             setTimeout(() => goToStep('1b'), 1000);
         }
 
-        // FEATURE 1: Don't Click Me Challenge
+        // STEP 1b: Don't Click Me Challenge
         function handleDontClickMe() {
             let btn = document.getElementById('btn-dont-click');
             let strings = ["Too slow! 😜", "Nope 😂", "Almost!", "Try again! 🤔", "Catch me! 💨"];
@@ -808,7 +847,7 @@
             }
         }
 
-        // STEP 2 – The Naughty Gift
+        // STEP 2: Gift Box
         function handleGiftClick() {
             let wrapper = document.getElementById('gift-box-wrap');
             let hint = document.getElementById('gift-hint');
@@ -836,11 +875,11 @@
             }
         }
 
-        // FEATURE 2: Multiple Gift Boxes
+        // STEP 2b: Multi Gifts
         function handleMultiGift(element, id) {
             if(element.classList.contains('opened')) return;
             
-            if(id === 3) { // Correct box choice mapping
+            if(id === 3) {
                 element.classList.add('opened');
                 playSystemSound('success');
                 burstConfetti(window.innerWidth/2, window.innerHeight/2);
@@ -854,7 +893,7 @@
             }
         }
 
-        // STEP 3 – Pop the Balloons
+        // STEP 3: Pop Balloons
         function popBalloon(element, word) {
             if(element.classList.contains('popped')) return;
             element.classList.add('popped');
@@ -872,7 +911,7 @@
             }
         }
 
-        // FEATURE 3: Fake Loading Screen
+        // STEP 3b: Fake Loader
         function runFakeLoaderAnimation() {
             let bar = document.getElementById('load-bar');
             let textDisplay = document.getElementById('loading-percent');
@@ -890,16 +929,14 @@
                 }, cp.t);
             });
 
-            // Trigger Error state
             setTimeout(() => {
-                playSystemSound('glitch');
+                playSystemSound('fail');
                 textDisplay.style.display = 'none';
                 wrapper.style.display = 'none';
                 header.style.display = 'none';
                 document.getElementById('error-display').style.display = 'block';
             }, 1800);
 
-            // Trigger Joking frame resolution
             setTimeout(() => {
                 playSystemSound('success');
                 document.getElementById('error-display').style.display = 'none';
@@ -911,7 +948,7 @@
             setTimeout(() => goToStep('4'), 4500);
         }
 
-        // STEP 4 – Birthday Cake
+        // STEP 4: Cake Light
         function handleCakeClick() {
             let flame = document.getElementById('cake-flame');
             let smoke = document.getElementById('cake-smoke');
@@ -926,13 +963,13 @@
                 playSystemSound('woosh');
                 flame.classList.remove('lit');
                 smoke.classList.add('active');
-                prompt.innerText = "Wish captured perfectly! One last surprise...";
+                prompt.innerText = "Wish captured perfectly! Moving forward...";
                 cakeState = 2;
                 setTimeout(() => goToStep('5'), 2000);
             }
         }
 
-        // STEP 5 – Treasure Chest
+        // STEP 5: Treasure Chest
         function tryKey(keyId) {
             if(keyId === 2) { 
                 document.getElementById('treasure-chest').classList.add('open');
@@ -941,8 +978,6 @@
                 setTimeout(() => goToStep('5b'), 1500);
             } else {
                 playSystemSound('fail');
-                let targetEl = document.getElementById(`key${keyId}`);
-                targetEl.style.transform = "scale(0.7)";
                 if(keyId === 1) {
                     for(let i=0; i<20; i++) particles.push(new Particle(window.innerWidth/2, window.innerHeight/2, '#fff066', 'sparkle'));
                 } else {
@@ -951,7 +986,7 @@
             }
         }
 
-        // FEATURE 4: Mini Story Reveal
+        // STEP 5b: Story Flip
         function flipStoryPage() {
             let el = document.getElementById(`page-${currentStoryPage}`);
             if(el) {
@@ -964,7 +999,7 @@
             }
         }
 
-        // FEATURE 5: Shooting Star
+        // STEP 5c: Celestial Star
         function igniteShootingStarLoop() {
             let star = document.getElementById('celestial-star');
             
@@ -974,7 +1009,6 @@
                 star.style.animation = 'strikeAcross 2s cubic-bezier(0.25, 1, 0.5, 1) forwards';
                 playSystemSound('woosh');
                 
-                // Reset animation properties upon completion cycle loop
                 setTimeout(() => {
                     star.style.display = 'none';
                     star.style.animation = 'none';
@@ -998,38 +1032,62 @@
             
             document.getElementById('sky-zone-board').style.background = 'rgba(255, 255, 255, 0.8)';
             setTimeout(() => {
-                triggerBlackoutIntermission();
-            }, 600);
+                goToStep('volleyball');
+            }, 800);
         }
 
-        // STEP 6 INTERMISSION – Almost There
-        function triggerBlackoutIntermission() {
-            let blackout = document.getElementById('blackout-screen');
-            let fireflyText = document.getElementById('firefly-msg');
+        // VOLLEYBALL MATCH POINT SPIKE HANDLER
+        function handleSpikeClick() {
+            let ball = document.getElementById('vball');
+            let status = document.getElementById('spike-status');
             
-            blackout.style.display = 'flex';
-            setTimeout(() => blackout.style.opacity = '1', 50);
+            spikeCount--;
+            playSystemSound('spike');
 
-            for(let i=0; i<30; i++) {
+            let randomX = (Math.random() - 0.5) * 150;
+            let randomY = (Math.random() - 0.5) * 80;
+            ball.style.transform = `translate(${randomX}px, ${randomY}px) scale(1.2)`;
+
+            setTimeout(() => ball.style.transform = `translate(${randomX}px, ${randomY}px) scale(1)`, 150);
+
+            if(spikeCount > 0) {
+                status.innerText = `Taps required: ${spikeCount}`;
+            } else {
+                status.innerText = "PERFECT MATCH POINT SPIKE! 💥";
+                let rect = ball.getBoundingClientRect();
+                for(let i=0; i<30; i++) {
+                    particles.push(new Particle(rect.left + 20, rect.top + 20, '#ff85a2', 'sparkle'));
+                }
+                playSystemSound('success');
+                setTimeout(triggerKDramaSlowMo, 1000);
+            }
+        }
+
+        // K-DRAMA SLOW MO TRANSITION
+        function triggerKDramaSlowMo() {
+            playSystemSound('swell');
+            let overlay = document.getElementById('slowmo-screen');
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.style.opacity = '1', 50);
+
+            for(let i=0; i<15; i++) {
                 setTimeout(() => {
                     let fx = Math.random() * window.innerWidth;
                     let fy = Math.random() * window.innerHeight;
-                    particles.push(new Particle(fx, fy, '#fff066', 'sparkle'));
-                }, i * 100);
+                    particles.push(new Particle(fx, fy, '#ff85a2', 'sparkle'));
+                }, i * 180);
             }
 
-            setTimeout(() => { fireflyText.classList.add('glow'); }, 1500);
-
             setTimeout(() => {
-                blackout.style.opacity = '0';
+                overlay.style.opacity = '0';
                 setTimeout(() => {
-                    blackout.style.display = 'none';
+                    overlay.style.display = 'none';
                     goToStep('6b');
-                }, 2000);
-            }, 4500);
+                }, 1000);
+            }, 3500);
         }
 
-        // FEATURE 6: One Last Click Cinematic Configuration Matrix
+        // STEP 6b: Ultimate Birthday Click
         function executeUltimateCinematicClick() {
             document.body.classList.add('final-sky');
             let mainBox = document.getElementById('main-box');
@@ -1037,7 +1095,6 @@
             
             playSystemSound('success');
             
-            // Mass launcher system configurations values tracking injection
             let cx = window.innerWidth / 2;
             let cy = window.innerHeight / 2;
             
@@ -1069,4 +1126,3 @@
     </script>
 </body>
 </html>
-
