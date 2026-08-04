@@ -55,14 +55,19 @@
         }
         .audio-control:hover { transform: scale(1.05); }
 
+        /* GAME CONTAINER & OVERFLOW FIX */
         .game-container {
-            position: relative; width: 90%; max-width: 550px; min-height: 400px;
+            position: relative; width: 90%; max-width: 550px;
+            max-height: 90vh; overflow-y: auto;
             background: var(--glass-bg); border: 1px solid var(--glass-border);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px; padding: 40px 30px; box-shadow: 0 20px 40px rgba(240, 98, 146, 0.15);
+            border-radius: 24px; padding: 35px 25px; box-shadow: 0 20px 40px rgba(240, 98, 146, 0.15);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; z-index: 10; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center; z-index: 10; transition: all 0.5s ease-out;
         }
+
+        .game-container::-webkit-scrollbar { width: 6px; }
+        .game-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
 
         .step-panel {
             display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%;
@@ -105,6 +110,682 @@
         .balloon-zone { display: flex; justify-content: center; gap: 30px; height: 180px; align-items: flex-end; width: 100%; margin: 20px 0; }
         .balloon { width: 65px; height: 80px; border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; position: relative; cursor: pointer; animation: floatUp 3s infinite alternate ease-in-out; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.15); transition: transform 0.1s; }
         .balloon::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; }
+        .balloon-1 { background: #ff85a2; animation-delay: 0s; } .balloon-1::after { border-bottom: 8px solid #ff85a2; }
+        .balloon-2 { background: #a29bfe; animation-delay: 0.4s; } .balloon-2::after { border-bottom: 8px solid #a29bfe; }
+        .balloon-3 { background: #74b9ff; animation-delay: 0.8s; } .balloon-3::after { border-bottom: 8px solid #74b9ff; }
+        @keyframes floatUp { 0% { transform: translateY(0) rotate(-3deg); } 100% { transform: translateY(-35px) rotate(3deg); } }
+        .balloon.popped { animation: popOut 0.2s forwards; pointer-events: none; }
+        @keyframes popOut { 0% { transform: scale(1); } 50% { transform: scale(1.3); opacity: 0.8; } 100% { transform: scale(0); opacity: 0; } }
+        .word-reveal { position: absolute; font-weight: bold; font-size: 1.3rem; color: #5c3d75; opacity: 0; transform: scale(0.5); transition: all 0.5s ease; pointer-events: none;}
+        .word-reveal.show { opacity: 1; transform: scale(1.2) translateY(-40px); }
+        .progress-container { width: 100%; background: rgba(0,0,0,0.05); height: 16px; border-radius: 10px; margin: 20px 0; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.3); }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff85a2, #a29bfe); border-radius: 10px; transition: width 0.1s linear; }
+        .error-text { color: #e84118; font-weight: 800; font-size: 2.2rem; animation: glitch 0.3s infinite; display: none; }
+        @keyframes glitch { 0% { transform: translate(2px, 1px) rotate(0deg); } 50% { transform: translate(-1px, -2px) rotate(-1deg); } 100% { transform: translate(1px, 2px) rotate(1deg); } }
+        .cake-container { position: relative; width: 160px; height: 160px; margin: 20px 0; cursor: pointer; }
+        .cake-layer { width: 140px; height: 60px; background: #fbc531; border-radius: 20px 20px 0 0; position: absolute; bottom: 0; left: 10px; box-shadow: inset 0 -10px #f5b041; }
+        .cake-layer-top { width: 110px; height: 45px; background: #ff7675; border-radius: 15px 15px 0 0; position: absolute; bottom: 55px; left: 25px; box-shadow: inset 0 -8px #e84118; }
+        .candle { width: 8px; height: 35px; background: #9c88ff; position: absolute; bottom: 95px; left: 76px; border-radius: 4px; }
+        .flame { width: 12px; height: 18px; background: #e1b12c; position: absolute; top: -16px; left: -2px; border-radius: 50% 50% 20% 20%; animation: flicker 0.1s infinite alternate; opacity: 0; transition: opacity 0.3s; }
+        .flame.lit { opacity: 1; }
+        @keyframes flicker { 0% { transform: scale(1) rotate(-2deg); } 100% { transform: scale(1.1) rotate(2deg); background: #f5cd79; } }
+        .smoke { position: absolute; width: 4px; height: 20px; background: rgba(200,200,200,0.6); top: -25px; left: 2px; border-radius: 50%; opacity: 0; pointer-events: none; }
+        .smoke.active { animation: smokeRise 1.5s ease-out forwards; }
+        @keyframes smokeRise { 0% { opacity: 0; transform: translateY(0) scaleX(1); filter: blur(0); } 20% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(-40px) scaleX(3); filter: blur(4px); } }
+        .chest-container { width: 140px; height: 100px; background: #8c7ae6; border-radius: 16px 16px 8px 8px; position: relative; margin: 20px 0; border: 4px solid #7158e2; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .chest-lid { width: 100%; height: 45px; background: #7158e2; border-radius: 12px 12px 0 0; position: absolute; top: 0; left: 0; transition: transform 0.5s; transform-origin: top; border-bottom: 4px solid #5f27cd; }
+        .chest-lock { width: 20px; height: 25px; background: #f1c40f; position: absolute; bottom: -10px; left: 56px; border-radius: 4px; }
+        .chest-container.open .chest-lid { transform: rotateX(-110deg); }
+        .keys-zone { display: flex; justify-content: center; gap: 40px; width: 100%; height: 80px; margin-top: 20px; position: relative; }
+        .key-item { font-size: 2.2rem; cursor: pointer; animation: keyFloat 2s infinite alternate ease-in-out; transition: all 0.2s; } .key-item:hover { transform: scale(1.3); }
+        #key1 { animation-delay: 0s; } #key2 { animation-delay: 0.5s; } #key3 { animation-delay: 1s; }
+        @keyframes keyFloat { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
+        .book-container { width: 280px; height: 180px; position: relative; perspective: 1200px; margin: 20px 0; cursor: pointer; }
+        .book-page { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background: #fffcf2; border: 1px solid #e1dbcd; border-radius: 4px 12px 12px 4px; padding: 20px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 600; font-style: italic; color: #5d5343; box-shadow: 2px 4px 10px rgba(0,0,0,0.06); transform-origin: left center; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s; backface-visibility: hidden; }
+        .book-page.flipped { transform: rotateY(-160deg); opacity: 0; pointer-events: none; }
+        .star-sky-zone { position: relative; width: 100%; height: 220px; background: rgba(15, 12, 32, 0.4); border-radius: 16px; margin: 15px 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+        .shooting-star-node { position: absolute; top: -20px; left: -20px; font-size: 1.8rem; cursor: pointer; z-index: 20; display: none; filter: drop-shadow(0 0 8px #fff066); }
+        @keyframes strikeAcross { 0% { top: -20px; left: -20px; transform: scale(0.8); } 100% { top: 240px; left: 100%; transform: scale(1.2); } }
+
+        /* JJK PROJECTION SORCERY / GLASS SHATTER EFFECTS */
+        #glass-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px) brightness(1.1); -webkit-backdrop-filter: blur(8px) brightness(1.1);
+            z-index: 1000; display: none; pointer-events: none;
+        }
+        .crack-line { stroke: rgba(255, 255, 255, 0.8); stroke-width: 2; fill: none; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        
+        .glass-shard {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px) brightness(1.2); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2) inset;
+            z-index: 1001; opacity: 1; pointer-events: none;
+            transform-origin: center;
+            transition: transform 1.8s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 1.8s ease-in;
+        }
+
+        /* CINEMATIC MESSAGES */
+        #message-container {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 1000; text-align: center; width: 90%; pointer-events: none;
+        }
+        .cinematic-text {
+            font-family: 'Poppins', sans-serif; font-weight: 300; font-size: 1.8rem;
+            color: #ffffff; text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            opacity: 0; transition: opacity 1.2s ease; position: absolute;
+            width: 100%; left: 0; top: 0; transform: translateY(-50%);
+        }
+        .cinematic-text.visible { opacity: 1; }
+
+        /* PHOTO STEP UI */
+        .photo-buttons { display: flex; flex-direction: column; gap: 12px; width: 100%; margin-top: 25px; }
+        .btn-photo { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-photo:hover { background: rgba(255,255,255,0.3); border-color: #fff; color: #fff; }
+
+        .photo-error-msg {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* FINAL CARD & SIDE-BY-SIDE POLAROID FIX */
+        .final-sky { background: #0b0914 !important; color: #fff !important; }
+        
+        .final-card {
+            max-width: 800px !important;
+            background: rgba(25, 18, 35, 0.85) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6) !important;
+            color: #fff !important;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .final-card.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .card-content-grid {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .card-text-side {
+            flex: 1;
+            text-align: left;
+        }
+
+        .card-text-side p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #f5f6fa;
+            margin-bottom: 0;
+        }
+
+        .polaroid-frame {
+            background: #ffffff;
+            padding: 10px 10px 30px 10px;
+            border-radius: 6px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-shrink: 0;
+            width: 220px;
+            transform: rotate(-3deg);
+            animation: polaroidPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, floatPolaroid 4s infinite alternate ease-in-out 0.8s;
+        }
+
+        .polaroid-frame img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 3px;
+            display: block;
+            background: #f0f0f0;
+        }
+
+        @keyframes polaroidPop {
+            0% { transform: scale(0.5) rotate(0deg); opacity: 0; }
+            100% { transform: scale(1) rotate(-3deg); opacity: 1; }
+        }
+
+        @keyframes floatPolaroid {
+            0% { transform: translateY(0) rotate(-3deg); }
+            100% { transform: translateY(-10px) rotate(-1deg); }
+        }
+
+        /* RESPONSIVE MOBILE ADJUSTMENTS */
+        @media(max-width: 680px) {
+            .game-container { width: 92%; padding: 25px 18px; }
+            h2 { font-size: 1.6rem; } 
+            .cinematic-text { font-size: 1.3rem; }
+            .balloon-zone { gap: 15px; } 
+            .key-item { font-size: 1.9rem; }
+            .book-container { width: 240px; height: 160px; }
+
+            .card-content-grid {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .card-text-side {
+                text-align: center;
+            }
+
+            .polaroid-frame {
+                width: 190px;
+                margin: 0 auto;
+            }
+
+            .polaroid-frame img {
+                height: 160px;
+            }
+
+            .card-text-side p {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-particle" style="top:15%; left:10%; font-size:25px;">✨</div>
+    <div class="ambient-particle" style="top:25%; right:15%; font-size:30px; animation-delay:1s;">🌸</div>
+    <div class="ambient-particle" style="bottom:20%; left:15%; font-size:20px; animation-delay:2s;">⭐</div>
+    <div class="ambient-particle" style="bottom:30%; right:10%; font-size:28px; animation-delay:1.5s;">🎈</div>
+
+    <canvas id="canvas-fx"></canvas>
+
+    <div class="audio-control" id="audio-toggle" onclick="toggleAudio()">
+        <span id="audio-icon">🎵</span> <span id="audio-text">Play Music</span>
+    </div>
+
+    <!-- GLASS SHATTER OVERLAYS -->
+    <div id="glass-overlay">
+        <svg width="100%" height="100%" style="position:absolute; top:0; left:0;">
+            <path id="svg-crack" class="crack-line" d="" />
+        </svg>
+    </div>
+    <div id="shatter-zone"></div>
+    <div id="message-container"></div>
+
+    <div class="game-container" id="main-box">
+        
+        <!-- STEP 0 – Welcome -->
+        <div class="step-panel active" id="step-0">
+            <div class="kdrama-banner">Episode 1: The Adventure</div>
+            <h2>A Special Gift Awaits...</h2>
+            <p>Every layer holds a secret. Are you ready to dive into the mystery?</p>
+            <button class="btn" onclick="goToStep('1')">🎁 Click for a Surprise</button>
+        </div>
+
+        <!-- STEP 1 – Are You Ready? -->
+        <div class="step-panel" id="step-1">
+            <h2>Hmm... Are you sure you're ready?</h2>
+            <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center; width:100%;">
+                <button class="btn" id="btn-yes" onclick="triggerYesAnimation()">Yes!</button>
+                <button class="btn btn-secondary" id="btn-maybe" onmouseover="dodgeButton()" onclick="dodgeButton()">Maybe...</button>
+            </div>
+        </div>
+
+        <!-- STEP 1b: Don't Click Me Challenge -->
+        <div class="step-panel" id="step-1b">
+            <h2>Whatever you do... 🛑</h2>
+            <p>Do NOT touch the button below!</p>
+            <button class="btn" id="btn-dont-click" onclick="handleDontClickMe()">🙈 Don't Click Me</button>
+        </div>
+
+        <!-- STEP 2 – The Naughty Gift -->
+        <div class="step-panel" id="step-2">
+            <h2>Unwrap Your Present! 🎁</h2>
+            <p>Go ahead, click it to see what's inside!</p>
+            <div class="gift-wrapper" id="gift-box-wrap" onclick="handleGiftClick()">
+                <div class="gift-bow"></div>
+                <div class="gift-box"></div>
+            </div>
+            <p id="gift-hint" style="font-size:0.9rem; color:var(--dark-pink); opacity:0.8; margin-top:15px;">Catch it if you can!</p>
+        </div>
+
+        <!-- STEP 2b: Multiple Gift Boxes -->
+        <div class="step-panel" id="step-2b">
+            <h2>The Gift Maze 🎁</h2>
+            <p id="multi-gift-prompt">Five boxes, but only one carries the pathway forward. Choose wisely!</p>
+            <div class="multi-gift-container">
+                <div class="gift-wrapper gift-alt-1" onclick="handleMultiGift(this, 1)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-2" onclick="handleMultiGift(this, 2)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-3" onclick="handleMultiGift(this, 3)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-4" onclick="handleMultiGift(this, 4)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+                <div class="gift-wrapper gift-alt-5" onclick="handleMultiGift(this, 5)"><div class="gift-bow"></div><div class="gift-box"></div></div>
+            </div>
+        </div>
+
+        <!-- STEP 3 – Pop the Balloons -->
+        <div class="step-panel" id="step-3">
+            <h2>Pop the Floating Balloons!</h2>
+            <p>Release the hidden feelings locked within them.</p>
+            <div class="balloon-zone">
+                <div style="position:relative;"><div class="balloon balloon-1" onclick="popBalloon(this, 'Smile 😊')"></div><div class="word-reveal" id="word-1">Smile 😊</div></div>
+                <div style="position:relative;"><div class="balloon balloon-2" onclick="popBalloon(this, 'Laugh 😂')"></div><div class="word-reveal" id="word-2">Laugh 😂</div></div>
+                <div style="position:relative;"><div class="balloon balloon-3" onclick="popBalloon(this, 'Shine ✨')"></div><div class="word-reveal" id="word-3">Shine ✨</div></div>
+            </div>
+            <h3 id="balloon-status" style="margin-top:20px; color:#5c3d75; height:24px;"></h3>
+        </div>
+
+        <!-- STEP 3b: Fake Loading Screen -->
+        <div class="step-panel" id="step-3b">
+            <h2 id="loading-header">Preparing Birthday Surprise...</h2>
+            <div class="progress-container" id="progress-wrapper"><div class="progress-bar" id="load-bar"></div></div>
+            <div id="loading-percent" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">0%</div>
+            <div class="error-text" id="error-display">❌ ERROR</div>
+        </div>
+
+        <!-- STEP 4 – Birthday Cake -->
+        <div class="step-panel" id="step-4">
+            <h2>Make a Wish! 🎂</h2>
+            <p id="cake-prompt">Click the cake to light up the festive candles.</p>
+            <div class="cake-container" onclick="handleCakeClick()">
+                <div class="candle"><div class="flame" id="cake-flame"><div class="smoke" id="cake-smoke"></div></div></div>
+                <div class="cake-layer-top"></div>
+                <div class="cake-layer"></div>
+            </div>
+        </div>
+
+        <!-- STEP 5 – Treasure Chest -->
+        <div class="step-panel" id="step-5">
+            <h2>Unlock the Vault of Hearts 🗝️</h2>
+            <p>Only one ancient key reveals the grand configuration.</p>
+            <div class="chest-container" id="treasure-chest"><div class="chest-lid"></div><div class="chest-lock"></div></div>
+            <div class="keys-zone">
+                <div class="key-item" id="key1" onclick="tryKey(1)">🗝️</div>
+                <div class="key-item" id="key2" onclick="tryKey(2)">🔑</div>
+                <div class="key-item" id="key3" onclick="tryKey(3)">🗝️</div>
+            </div>
+        </div>
+
+        <!-- STEP 5b: Mini Story Reveal -->
+        <div class="step-panel" id="step-5b">
+            <h2>Our Little Chapter 📖</h2>
+            <p>Click the pages to reveal a quiet truth...</p>
+            <div class="book-container" onclick="flipStoryPage()">
+                <div class="book-page" id="page-3" style="z-index: 1;">"I think you already know who we're talking about... 😉"</div>
+                <div class="book-page" id="page-2" style="z-index: 2;">"She's kind, funny, caring, and always brings smiles to others."</div>
+                <div class="book-page" id="page-1" style="z-index: 3;">"Someone very special has a birthday today..."</div>
+            </div>
+        </div>
+
+        <!-- STEP 5c: Shooting Star -->
+        <div class="step-panel" id="step-5c">
+            <h2>Celestial Alignment 🌠</h2>
+            <p>Catch the shooting star and make a wish.</p>
+            <div class="star-sky-zone" id="sky-zone-board">
+                <div class="shooting-star-node" id="celestial-star" onclick="catchShootingStar()">💫</div>
+            </div>
+        </div>
+
+        <!-- STEP 6b: One Last Click Main Stage -->
+        <div class="step-panel" id="step-6b">
+            <div class="kdrama-banner">Episode Finale ✨</div>
+            <button class="btn" id="btn-final-click" onclick="executeUltimateCinematicClick()" style="font-size: 1.3rem; padding: 18px 40px; animation: flicker 0.5s infinite alternate;">✨ One Last Click...</button>
+        </div>
+
+        <!-- STEP PHOTO: Final Photo Prompt -->
+        <div class="step-panel" id="step-photo">
+            <h2 style="color: #fff066; font-size: 1.8rem;">The birthday card is almost complete...</h2>
+            <p style="color: #f5f6fa;">There's just one thing missing.<br><br>You. ✨<br><br><span style="font-size:0.9rem; opacity:0.8;">Add a photo from your gallery or take one with your camera if you'd like.</span></p>
+            
+            <div class="photo-buttons">
+                <button class="btn btn-photo" onclick="document.getElementById('camera-input').click()">📷 Take Photo</button>
+                <button class="btn btn-photo" onclick="document.getElementById('gallery-input').click()">🖼️ Choose from Gallery</button>
+                <button class="btn btn-photo" style="background:transparent; border:none; text-decoration:underline;" onclick="skipPhotoStep()">⏭️ Skip</button>
+            </div>
+
+            <div class="photo-error-msg" id="photo-error">⚠️ Couldn't load that image. Please choose another file!</div>
+
+            <!-- Hidden Local Inputs -->
+            <input type="file" id="camera-input" accept="image/jpeg,image/png,image/webp,image/heic,image/*" capture="environment" style="display:none;" onchange="processPhoto(event)">
+            <input type="file" id="gallery-input" accept="image/jpeg,image/png,image/webp,image/heic,image/*" style="display:none;" onchange="processPhoto(event)">
+        </div>
+
+        <!-- STEP 7: FINAL REVEAL (Nisha's Birthday Card - Side By Side Fixed) -->
+        <div class="step-panel" id="step-7">
+            <h2 style="color: #fff066; text-shadow: 0 0 15px rgba(255,240,102,0.4); font-size: 2.2rem; margin-bottom: 10px;">🎉 Happy Birthday, Nisha! 🎂</h2>
+            
+            <div class="card-content-grid">
+                <!-- Photo on Side -->
+                <div class="polaroid-frame" id="polaroid-wrapper">
+                    <img id="polaroid-img" src="" alt="Nisha">
+                </div>
+
+                <!-- Text on Side -->
+                <div class="card-text-side">
+                    <p>Wishing you endless happiness, lots of laughter, good health, exciting adventures, and countless reasons to smile. May every day of this new year bring you beautiful memories and wonderful moments. Keep shining and being the amazing person you are. Have an absolutely fantastic birthday! 💖✨</p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="location.reload()" style="background: linear-gradient(135deg, #fff066 0%, #f1c40f 100%); color:#333; margin-top:25px;">🎉 Celebrate Again</button>
+        </div>
+
+    </div>
+
+    <script>
+        let audioCtx = null;
+        let audioPlaying = false;
+        let mainSequenceInterval = null;
+
+        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
+        function playTone(freq, type, duration, startTime, vol = 0.1) {
+            if(!audioPlaying) return;
+            let osc = audioCtx.createOscillator();
+            let gainNode = audioCtx.createGain();
+            osc.type = type; osc.frequency.setValueAtTime(freq, startTime);
+            gainNode.gain.setValueAtTime(vol, startTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, startTime + duration);
+            osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+            osc.start(startTime); osc.stop(startTime + duration);
+        }
+
+        function startBGM() {
+            initAudio(); audioPlaying = true;
+            let tempo = 140; let quarterNote = 60 / tempo;
+            let melody = [261.63, 261.63, 293.66, 261.63, 349.23, 329.63, 261.63, 261.63, 293.66, 261.63, 392.00, 349.23];
+            let beats = [0.75, 0.25, 1, 1, 1, 2, 0.75, 0.25, 1, 1, 1, 2];
+            let lookahead = 0.5; let index = 0; let nextNoteTime = audioCtx.currentTime;
+
+            function scheduleNextNotes() {
+                while (nextNoteTime < audioCtx.currentTime + lookahead && audioPlaying) {
+                    let duration = beats[index] * quarterNote;
+                    playTone(melody[index], 'triangle', duration, nextNoteTime, 0.08);
+                    nextNoteTime += duration; index = (index + 1) % melody.length;
+                }
+                if(audioPlaying) mainSequenceInterval = setTimeout(scheduleNextNotes, 100);
+            }
+            scheduleNextNotes();
+        }
+
+        function stopBGM() { audioPlaying = false; if(mainSequenceInterval) clearTimeout(mainSequenceInterval); }
+
+        function toggleAudio() {
+            let icon = document.getElementById('audio-icon'); let text = document.getElementById('audio-text');
+            if (!audioPlaying) {
+                audioPlaying = true; if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                startBGM(); icon.innerText = "⏸️"; text.innerText = "Pause Music"; playSystemSound('click');
+            } else { stopBGM(); icon.innerText = "🎵"; text.innerText = "Play Music"; }
+        }
+
+        function playSystemSound(type) {
+            if(!audioCtx) return;
+            let now = audioCtx.currentTime;
+            if(type === 'click') { playTone(600, 'sine', 0.1, now, 0.15); } 
+            else if(type === 'pop') { playTone(900, 'sine', 0.08, now, 0.2); playTone(400, 'triangle', 0.05, now, 0.1); } 
+            else if(type === 'success') { playTone(523.25, 'sine', 0.15, now, 0.15); playTone(659.25, 'sine', 0.15, now+0.1, 0.15); playTone(783.99, 'sine', 0.3, now+0.2, 0.15); } 
+            else if(type === 'fail') { playTone(220, 'sawtooth', 0.15, now, 0.15); playTone(180, 'sawtooth', 0.15, now+0.05, 0.15); } 
+            else if(type === 'woosh') { playTone(340, 'triangle', 0.15, now, 0.2); }
+            else if(type === 'crack') { playTone(1500, 'sawtooth', 0.1, now, 0.3); playTone(1800, 'square', 0.05, now+0.05, 0.2); }
+            else if(type === 'shatter') { 
+                for(let i=0; i<5; i++) { playTone(400 + Math.random()*800, 'sawtooth', 0.2, now + i*0.02, 0.2); }
+            }
+        }
+
+        // --- PARTICLE ENGINE ---
+        const canvas = document.getElementById('canvas-fx'); const ctx = canvas.getContext('2d');
+        let particles = []; let fireworks = []; let activeBalloonsArray = [];
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+        class Particle {
+            constructor(x, y, color, type='confetti') {
+                this.x = x; this.y = y; this.color = color; this.type = type;
+                this.radius = type === 'confetti' ? Math.random() * 6 + 4 : Math.random() * 3 + 1;
+                this.vx = (Math.random() - 0.5) * 8; this.vy = type === 'confetti' ? (Math.random() - 0.8) * 10 : (Math.random() - 0.5) * 6;
+                this.gravity = type === 'confetti' ? 0.2 : 0.02; this.alpha = 1;
+                this.rotation = Math.random() * Math.PI; this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+            }
+            update() { this.x+=this.vx; this.y+=this.vy; this.vy+=this.gravity; this.alpha-=0.015; this.rotation+=this.rotationSpeed; }
+            draw() {
+                ctx.save(); ctx.globalAlpha = this.alpha; ctx.translate(this.x, this.y); ctx.rotate(this.rotation); ctx.fillStyle = this.color;
+                if(this.type === 'confetti') ctx.fillRect(-this.radius, -this.radius, this.radius*2, this.radius);
+                else { ctx.beginPath(); ctx.arc(0,0, this.radius, 0, Math.PI*2); ctx.fill(); }
+                ctx.restore();
+            }
+        }
+        class Firework {
+            constructor(x, targetY) { this.x = x; this.y = canvas.height; this.targetY = targetY; this.vy = -Math.random()*4-8; this.color = `hsl(${Math.random()*360}, 100%, 70%)`; this.exploded = false; }
+            update() { this.y+=this.vy; if(this.vy>=0 || this.y<=this.targetY) { this.exploded = true; createExplosion(this.x, this.y, this.color); } }
+            draw() { if(!this.exploded) { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, 4, 0, Math.PI*2); ctx.fill(); } }
+        }
+        class FloatingCelebBalloon {
+            constructor() { this.x=Math.random()*canvas.width; this.y=canvas.height+40; this.radius=Math.random()*15+20; this.speed=Math.random()*2+1; this.color=`hsl(${Math.random()*360}, 85%, 65%)`; this.swing=Math.random()*2; this.swingSpeed=Math.random()*0.05; this.angle=Math.random()*Math.PI; }
+            update() { this.y-=this.speed; this.angle+=this.swingSpeed; this.x+=Math.sin(this.angle)*this.swing; }
+            draw() {
+                ctx.save(); ctx.fillStyle = this.color; ctx.beginPath(); ctx.ellipse(this.x, this.y, this.radius*0.8, this.radius, 0, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.moveTo(this.x, this.y+this.radius); ctx.lineTo(this.x-5, this.y+this.radius+6); ctx.lineTo(this.x+5, this.y+this.radius+6); ctx.closePath(); ctx.fill(); ctx.restore();
+            }
+        }
+        function createExplosion(x, y, color) { playSystemSound('pop'); for(let i=0; i<60; i++) particles.push(new Particle(x, y, color, 'sparkle')); }
+        function burstConfetti(x, y) { let colors = ['#ff85a2','#a29bfe','#74b9ff','#fff066','#55efc4']; for(let i=0; i<80; i++) particles.push(new Particle(x, y, colors[Math.floor(Math.random()*colors.length)], 'confetti')); }
+
+        function loopVFX() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            for(let i=particles.length-1; i>=0; i--) { particles[i].update(); particles[i].draw(); if(particles[i].alpha<=0) particles.splice(i, 1); }
+            for(let i=fireworks.length-1; i>=0; i--) { fireworks[i].update(); fireworks[i].draw(); if(fireworks[i].exploded) fireworks.splice(i, 1); }
+            for(let i=activeBalloonsArray.length-1; i>=0; i--) { activeBalloonsArray[i].update(); activeBalloonsArray[i].draw(); if(activeBalloonsArray[i].y<-50) activeBalloonsArray.splice(i, 1); }
+            if(currentStep === '7' && Math.random()<0.05) fireworks.push(new Firework(Math.random()*canvas.width, Math.random()*(canvas.height*0.5)));
+            if(currentStep === '7' && Math.random()<0.03) activeBalloonsArray.push(new FloatingCelebBalloon());
+            requestAnimationFrame(loopVFX);
+        }
+        requestAnimationFrame(loopVFX);
+
+        // --- GAME LOGIC ---
+        let currentStep = '0';
+        let dodgeCount = 0; let dontClickCount = 0; let giftClickAttempts = 0; let totalBalloonsPopped = 0; let cakeState = 0; let currentStoryPage = 1; let targetStarLoop = null;
+
+        function goToStep(stepId) {
+            initAudio(); playSystemSound('click');
+            document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+            if(stepId === '1') { document.getElementById('main-box').classList.add('shake-screen'); setTimeout(()=>document.getElementById('main-box').classList.remove('shake-screen'), 500); }
+            if(stepId === '3b') setTimeout(runFakeLoaderAnimation, 600);
+            if(stepId === '5c') setTimeout(igniteShootingStarLoop, 500);
+            currentStep = stepId; let currentPanel = document.getElementById(`step-${stepId}`); if(currentPanel) currentPanel.classList.add('active');
+        }
+
+        // Interactive steps
+        function dodgeButton() { playSystemSound('woosh'); let btn = document.getElementById('btn-maybe'); if(dodgeCount===0){ btn.style.transform = `translateX(${Math.random()>0.5?90:-90}px) translateY(${Math.random()>0.5?40:-40}px)`; dodgeCount++; } else { btn.innerText="Yes!"; btn.className="btn"; btn.style.transform="none"; btn.onmouseover=null; btn.onclick=function(){triggerYesAnimation();}; } }
+        function triggerYesAnimation() { burstConfetti(window.innerWidth/2, window.innerHeight/2); playSystemSound('success'); setTimeout(()=>goToStep('1b'), 1000); }
+        function handleDontClickMe() { let btn = document.getElementById('btn-dont-click'); let strings = ["Too slow! 😜", "Nope 😂", "Almost!", "Try again! 🤔", "Catch me! 💨"]; if(dontClickCount<5) { playSystemSound('woosh'); let r = document.getElementById('main-box').getBoundingClientRect(); btn.style.transform = `translate(${Math.random()*(r.width-100)-(r.width/2-50)}px, ${Math.random()*(r.height-150)-(r.height/2)+20}px)`; btn.innerText = strings[dontClickCount%strings.length]; dontClickCount++; } else { btn.style.transform="none"; btn.innerText="Okay, okay... You win!"; playSystemSound('success'); btn.disabled=true; setTimeout(()=>goToStep('2'), 1500); } }
+        function handleGiftClick() { let w = document.getElementById('gift-box-wrap'); let h = document.getElementById('gift-hint'); if(giftClickAttempts<4) { playSystemSound('woosh'); let r = document.getElementById('main-box').getBoundingClientRect(); w.style.transform = `translate(${Math.random()*(r.width-140)-(r.width/2)}px, ${Math.random()*(r.height-200)-(r.height/2)+30}px)`; giftClickAttempts++; h.innerText = ["Too slow!", "Over here!", "Catch me!", "Almost!"][giftClickAttempts-1]; } else { w.style.transform="none"; w.classList.add('opened'); playSystemSound('success'); h.innerText="Opened!"; setTimeout(()=>{ alert("📜 'Not yet... One more challenge!'"); goToStep('2b'); }, 600); } }
+        function handleMultiGift(e, id) { if(e.classList.contains('opened')) return; if(id===3) { e.classList.add('opened'); playSystemSound('success'); burstConfetti(window.innerWidth/2, window.innerHeight/2); document.getElementById('multi-gift-prompt').innerText = "You found the real surprise! ✨"; setTimeout(()=>goToStep('3'), 1500); } else { e.classList.add('opened'); playSystemSound('fail'); document.getElementById('multi-gift-prompt').innerText = ["😂 Oops...", "🎈 Maybe another one?", "😅 Not this gift.", "✨ Keep looking!"][id%4]; } }
+        function popBalloon(e, w) { if(e.classList.contains('popped')) return; e.classList.add('popped'); playSystemSound('pop'); if(e.nextElementSibling) e.nextElementSibling.classList.add('show'); totalBalloonsPopped++; document.getElementById('balloon-status').innerText = `${w}!`; if(totalBalloonsPopped===3){ document.getElementById('balloon-status').innerText="You're doing great! ✨"; setTimeout(()=>goToStep('3b'), 1500); } }
+        function runFakeLoaderAnimation() { let b = document.getElementById('load-bar'); let t = document.getElementById('loading-percent'); let h = document.getElementById('loading-header'); let w = document.getElementById('progress-wrapper'); let cp = [{p:20,t:200},{p:47,t:500},{p:81,t:900},{p:99,t:1400}]; cp.forEach(c => { setTimeout(()=>{ b.style.width=`${c.p}%`; t.innerText=`${c.p}%`; playSystemSound('click'); }, c.t); }); setTimeout(()=>{ playSystemSound('fail'); t.style.display='none'; w.style.display='none'; h.style.display='none'; document.getElementById('error-display').style.display='block'; }, 1800); setTimeout(()=>{ playSystemSound('success'); document.getElementById('error-display').style.display='none'; h.style.display='block'; h.innerText="Just kidding! 😂"; burstConfetti(window.innerWidth/2, window.innerHeight/2); }, 3000); setTimeout(()=>goToStep('4'), 4500); }
+        function handleCakeClick() { let f = document.getElementById('cake-flame'); let s = document.getElementById('cake-smoke'); let p = document.getElementById('cake-prompt'); if(cakeState===0){ playSystemSound('success'); f.classList.add('lit'); p.innerText="Perfect! Now click the flame to blow it out."; cakeState=1; } else if(cakeState===1){ playSystemSound('woosh'); f.classList.remove('lit'); s.classList.add('active'); p.innerText="Wish captured perfectly!"; cakeState=2; setTimeout(()=>goToStep('5'), 2000); } }
+        function tryKey(id) { if(id===2){ document.getElementById('treasure-chest').classList.add('open'); playSystemSound('success'); burstConfetti(window.innerWidth/2, window.innerHeight/2); setTimeout(()=>goToStep('5b'), 1500); } else { playSystemSound('fail'); alert("💥 Wrong key!"); } }
+        function flipStoryPage() { let e = document.getElementById(`page-${currentStoryPage}`); if(e){ playSystemSound('woosh'); e.classList.add('flipped'); currentStoryPage++; if(currentStoryPage>3) setTimeout(()=>goToStep('5c'), 1000); } }
+        function igniteShootingStarLoop() { let s = document.getElementById('celestial-star'); function p(){ if(currentStep!=='5c') return; s.style.display='block'; s.style.animation='strikeAcross 2s cubic-bezier(0.25, 1, 0.5, 1) forwards'; playSystemSound('woosh'); setTimeout(()=>s.style.display='none', 2000); } p(); targetStarLoop = setInterval(p, 4000); }
+        
+        function catchShootingStar() {
+            clearInterval(targetStarLoop); playSystemSound('success');
+            let s = document.getElementById('celestial-star'); let r = s.getBoundingClientRect();
+            for(let i=0; i<40; i++) particles.push(new Particle(r.left+15, r.top+15, '#fff066', 'sparkle'));
+            s.style.display='none';
+            document.getElementById('sky-zone-board').style.background = 'rgba(255,255,255,0.8)';
+            setTimeout(() => goToStep('6b'), 800);
+        }
+
+        // --- FINAL SEQUENCE WITH GLASS SHATTER & EXACT MESSAGES ---
+        async function executeUltimateCinematicClick() {
+            document.getElementById('btn-final-click').style.animation = 'none';
+            
+            // 1. Freeze Screen & Draw Cracks
+            let overlay = document.getElementById('glass-overlay');
+            overlay.style.display = 'block';
+            playSystemSound('crack');
+            
+            let crack = document.getElementById('svg-crack');
+            let w = window.innerWidth, h = window.innerHeight;
+            crack.setAttribute('d', `M${w/2},${h/2} L${w*0.2},0 M${w/2},${h/2} L${w*0.8},${h} M${w/2},${h/2} L0,${h*0.4} M${w/2},${h/2} L${w},${h*0.6} M${w*0.3},${h*0.3} L${w*0.7},0`);
+            crack.style.transition = 'stroke-dashoffset 0.4s ease-out';
+            
+            await new Promise(r => setTimeout(r, 50));
+            crack.style.strokeDashoffset = '0';
+            
+            await new Promise(r => setTimeout(r, 500));
+
+            // 2. Shatter Glass
+            playSystemSound('shatter');
+            document.getElementById('main-box').style.opacity = '0';
+            overlay.style.display = 'none';
+            document.body.classList.add('final-sky');
+            document.querySelectorAll('.ambient-particle').forEach(p => p.style.opacity = '0');
+
+            let sz = document.getElementById('shatter-zone');
+            for(let i=0; i<15; i++) {
+                let shard = document.createElement('div');
+                shard.className = 'glass-shard';
+                shard.style.width = `${Math.random()*300 + 100}px`;
+                shard.style.height = `${Math.random()*300 + 100}px`;
+                shard.style.left = `${Math.random()*w}px`;
+                shard.style.top = `${Math.random()*h}px`;
+                
+                let p1 = `${Math.random()*100}% ${Math.random()*100}%`;
+                let p2 = `${Math.random()*100}% ${Math.random()*100}%`;
+                let p3 = `${Math.random()*100}% ${Math.random()*100}%`;
+                shard.style.clipPath = `polygon(${p1}, ${p2}, ${p3})`;
+                
+                sz.appendChild(shard);
+
+                setTimeout(() => {
+                    let moveX = (Math.random() - 0.5) * 800;
+                    let moveY = (Math.random() - 0.5) * 800;
+                    let rot = (Math.random() - 0.5) * 180;
+                    shard.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rot}deg) scale(0.5)`;
+                    shard.style.opacity = '0';
+                }, 50);
+            }
+
+            await new Promise(r => setTimeout(r, 1200));
+            sz.innerHTML = '';
+
+            // 3. Exact Cinematic Messages
+            const messages = [
+                "I know this gift isn't perfect.",
+                "But it took lots of effort from me.",
+                "If you really liked it, that's good to know.",
+                "We may not always talk.",
+                "So I made this for you.",
+                "I just wanted to make you smile today."
+            ];
+
+            let msgContainer = document.getElementById('message-container');
+            for(let msg of messages) {
+                let p = document.createElement('div');
+                p.className = 'cinematic-text';
+                p.innerText = msg;
+                msgContainer.appendChild(p);
+                
+                await new Promise(r => setTimeout(r, 100));
+                p.classList.add('visible');
+                
+                await new Promise(r => setTimeout(r, 2000));
+                
+                p.classList.remove('visible');
+                await new Promise(r => setTimeout(r, 1200));
+                msgContainer.innerHTML = '';
+            }
+
+            // Pause for 2 seconds after the last message
+            await new Promise(r => setTimeout(r, 2000));
+            
+            // Reveal Final Photo Prompt
+            document.getElementById('main-box').classList.add('final-card');
+            document.getElementById('main-box').style.opacity = '1';
+            goToStep('photo');
+            setTimeout(() => document.getElementById('main-box').classList.add('show'), 100);
+        }
+
+        // --- RELIABLE PHOTO PROCESSING LOGIC ---
+        function processPhoto(event) {
+            const file = event.target.files && event.target.files[0];
+            const errorBox = document.getElementById('photo-error');
+            errorBox.style.display = 'none';
+
+            if (!file) return;
+
+            if (!file.type.startsWith('image/') && !file.name.match(/\.(heic|heif)$/i)) {
+                showPhotoError("Selected file is not a supported image format.");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const imgElement = document.getElementById('polaroid-img');
+                const polaroidWrapper = document.getElementById('polaroid-wrapper');
+
+                imgElement.onload = function() {
+                    polaroidWrapper.style.display = 'block';
+                    triggerFinalCelebration();
+                };
+
+                imgElement.onerror = function() {
+                    showPhotoError("Failed to render photo. Please try a different image.");
+                    polaroidWrapper.style.display = 'none';
+                };
+
+                imgElement.src = e.target.result;
+            };
+
+            reader.onerror = function() {
+                showPhotoError("Error reading file. Please try again.");
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function showPhotoError(msg) {
+            playSystemSound('fail');
+            const errorBox = document.getElementById('photo-error');
+            if (errorBox) {
+                errorBox.innerText = `⚠️ ${msg}`;
+                errorBox.style.display = 'block';
+            }
+            document.getElementById('camera-input').value = '';
+            document.getElementById('gallery-input').value = '';
+        }
+
+        function skipPhotoStep() {
+            document.getElementById('polaroid-wrapper').style.display = 'none';
+            triggerFinalCelebration();
+        }
+
+        // --- FINAL REVEAL (STEP 7) ---
+        function triggerFinalCelebration() {
+            playSystemSound('success');
+            
+            let cx = window.innerWidth / 2; let cy = window.innerHeight / 2;
+            for(let i=0; i<150; i++) setTimeout(() => particles.push(new Particle(cx+(Math.random()-0.5)*100, cy+(Math.random()-0.5)*100, `hsl(${Math.random()*360}, 100%, 70%)`, 'confetti')), Math.random()*800);
+            for(let k=0; k<8; k++) setTimeout(() => fireworks.push(new Firework(Math.random()*window.innerWidth, Math.random()*(window.innerHeight*0.4))), k*250);
+            for(let b=0; b<35; b++) setTimeout(() => activeBalloonsArray.push(new FloatingCelebBalloon()), b*60);
+
+            document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('step-7').classList.add('active');
+        }
+
+    </script>
+</body>
+</html>
         .balloon-1 { background: #ff85a2; animation-delay: 0s; } .balloon-1::after { border-bottom: 8px solid #ff85a2; }
         .balloon-2 { background: #a29bfe; animation-delay: 0.4s; } .balloon-2::after { border-bottom: 8px solid #a29bfe; }
         .balloon-3 { background: #74b9ff; animation-delay: 0.8s; } .balloon-3::after { border-bottom: 8px solid #74b9ff; }
